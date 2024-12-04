@@ -1,9 +1,11 @@
 const express = require('express');
 const axios = require('axios');
+const cors = require('cors'); // Require the cors package
 const app = express();
 const port = 3001;
 const hardcodedResponseTest = true;
 
+app.use(cors()); // Enable CORS for all routes
 app.use(express.json());
 
 app.post('/api/llm', async (req, res) => {
