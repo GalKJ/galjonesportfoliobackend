@@ -9,17 +9,28 @@ app.use(cors()); // Enable CORS for all routes
 app.use(express.json());
 
 app.post('/api/llm', async (req, res) => {
+  console.log('Received POST request at /api/llm');
   try {
     if (hardcodedResponseTest) {
-      const hardcodedResponse = { message: 'This is a hardcoded response' };
+      const hardcodedResponse = { response: 'This is a hardcoded response' };
       res.json(hardcodedResponse);
     } else {
-      const response = await axios.post('http://localhost:5000/', req.body);
+      console.log('Request to LLM:', req.body);
+      const response = await axios.post(
+        'http://localhost:5000/api/chat/completions',
+        req.body
+      );
+
       res.json(response.data);
     }
   } catch (error) {
     res.status(500).send(error.message);
   }
+});
+
+// Define the /error endpoint
+app.get('/error', (req, res) => {
+  res.status(500).send('This is a simulated error.');
 });
 
 app.listen(port, () => {
