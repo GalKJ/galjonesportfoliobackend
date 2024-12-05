@@ -1,9 +1,10 @@
 const express = require('express');
 const axios = require('axios');
-const cors = require('cors'); // Require the cors package
+const cors = require('cors');
 const app = express();
 const port = 3001;
-const hardcodedResponseTest = true;
+const hardcodedResponseTest = false; // Set to false to forward requests
+const apiKey = 'sk-f1ca6e7227174b6ca33a087f2e66d227';
 
 app.use(cors()); // Enable CORS for all routes
 app.use(express.json());
@@ -18,19 +19,19 @@ app.post('/api/llm', async (req, res) => {
       console.log('Request to LLM:', req.body);
       const response = await axios.post(
         'http://localhost:5000/api/chat/completions',
-        req.body
+        req.body,
+        {
+          headers: {
+            Authorization: `Bearer ${apiKey}`,
+            'Content-Type': 'application/json',
+          },
+        }
       );
-
       res.json(response.data);
     }
   } catch (error) {
     res.status(500).send(error.message);
   }
-});
-
-// Define the /error endpoint
-app.get('/error', (req, res) => {
-  res.status(500).send('This is a simulated error.');
 });
 
 app.listen(port, () => {
